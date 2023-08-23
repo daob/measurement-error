@@ -1,6 +1,28 @@
 ---
-title: "Estimating measurement error (variance) in survey questions"
+title: "Estimating survey measurement error"
 ---
+
+## Introduction
+
+Below, you will find 10 exercises (1.1 -- 1.10) related to the estimation of measurement error in survey questions. You are meant to work through this document gradually, by starting at the top reading, and doing the first exercise in `R`, etc. You may need to install some libraries, which are indicated under "Preliminaries" below. You will also require an internet connection to download the two datasets used in the exercises.
+
+If you have not already done so, it may also be helpful to keep the slides open so you can refer to them as you answer the more knowledge-oriented questions.
+
+Each exercise consists of a question. Often you will need to adapt and run `R` code in order to answer this question. In order to help you along should your experience with `R` be limited, some (hopefully) helpful hints are provided. You can choose to look at these, or not, as you may require. The hints look as shown below. CLick the green bar to reveal the hint.
+
+::: {.callout-tip collapse="true"}
+#### I need a hint!
+Hints are intended to help you along, especially if you are encountering `R` and/or `lavaan` for the first time. 
+:::
+
+Each exercise also provides a solution so you can check your own work. Your learning will be most effective if you try not to look at these right away, but instead attempt the question first. If you really get stuck, or if you are happy with your answer, you could allow yourself to look at the solution, which look as shown below.  Click the orange bar to reveal the solution. 
+
+::: {.callout-caution collapse="true"}
+#### Solution
+Please try not to look at the solution until you have attempted the question in earnest.
+:::
+
+Remember that you are strongly encouraged to consult your instructor and fellow students. Often a very small nudge in the right direction can be enough to get to the right answer!
 
 ## Preliminaries
 
@@ -481,5 +503,129 @@ These models can be used to estimate the measurement error variance in longitudi
 In the slides, error estimation in "internet use" using three timepoints (years 2008-2010) is explained. In the dataset, which is included in the `lavaan.survey` package as `liss`, a fourth timepoint, 2011, is also available (`cs11d247`). Adjust the model to the right to include `cs11d247` so it also estimates the reliability in 2011.
 
 The full study documentation as well as the raw data are publicly available at <http://www.lissdata.nl/dataarchive/study_units/view/6>. (BTW: LISS is an awesome publicly available longitudinal data source you should definitely check out if you're ever looking for high-quality social science data)
+
+For now, we will load a prepared dataset from LISS stored on my website.
+
+```{r}
+load(url("http://daob.nl/files/SURV730/liss.rdata"))
+```
+
+Since it is likely that you have not encountered `lavaan`, SEM, or quasi-simplex modeling before, some ready-made code for such a model applied to the LISS data is provided below.
+
+
+#### Ready-made R code for quasi-simplex model
+
+```{r, eval=FALSE}
+# Formulate the quasi-simplex model for three timepoints
+# Adapt this to also include the measurement at 2011, cs11d247
+model.qs <- "
+  # The part where each true score variable at time t 
+  #    is measured by the survey answers at time t:
+  cs08 =~ 1 * cs08a247
+  cs09 =~ 1 * cs09b247
+  cs10 =~ 1 * cs10c247
+
+  # The part where the true score at time t 
+  #	    is regressed on the true score at time t-1:
+  # a.k.a. the 'AR(1) process':
+  cs09 ~ cs08
+  cs10 ~ cs09
+
+  # The part where the measurement error variance is 
+  #		assumed equal over time:
+  cs08a247 ~~ vare * cs08a247
+  cs09b247 ~~ vare * cs09b247
+  cs10c247 ~~ vare * cs10c247
+"
+# Fit the quasi-simplex model with lavaan as a SEM:
+fit.liss <- lavaan(model.qs, auto.var = TRUE, data = liss)
+
+# Output the estimates, including reliability coefficients and stability across time:
+summary(fit.liss, standardized = TRUE)
+
+# This is to check the solution:
+std_estimates <- fit.liss %>% 
+  standardizedSolution %>% 
+  filter(op == "=~") %>% 
+  arrange(lhs, rhs)
+
+std_estimates
+```
+
+
+### Exercise 1.10
+
+Instructions: 
+- Change the quasi-simplex model for 2008-2010 to also include 2011
+- Do this by adding one additional line of code for each of the three parts of the model 
+- Note that the newly used observed variable name is `cs11d247` (so with a d)
+
+a. Which assumptions do we need to make in order for the estimates to reflect the reliability of this survey question?
+b. What is the estimated reliability of this survey question according to the quasi-simplex model?
+c. What is the estimated stability over time of this survey question according to the quasi-simplex model?
+
+::: {.callout-caution collapse="true"}
+#### Solution
+
+```{r}
+model.qs <- "
+  cs08 =~ 1 * cs08a247
+  cs09 =~ 1 * cs09b247
+  cs10 =~ 1 * cs10c247
+  cs11 =~ 1 * cs11d247
+
+  cs09 ~ cs08
+  cs10 ~ cs09
+  cs11 ~ cs10
+
+  cs08a247 ~~ vare * cs08a247
+  cs09b247 ~~ vare * cs09b247
+  cs10c247 ~~ vare * cs10c247
+  cs11d247 ~~ vare * cs11d247
+
+"
+
+fit.liss <- lavaan(model.qs, auto.var = TRUE, data = liss)
+
+summary(fit.liss, standardized = TRUE)
+
+# This is to check the solution
+std_estimates <- fit.liss %>% 
+  standardizedSolution %>% 
+  filter(op == "=~") %>% 
+  arrange(lhs, rhs)
+
+std_estimates
+```
+
+a. From the slides, we have the following assumptions:
+- No
+correlated
+error
+- Identical
+error
+variances over
+time
+- No
+differential
+error
+- True
+score
+change
+AR(1)
+- All
+time-specific
+variance
+is
+measurement
+error
+
+Looking at the standardized estimates from the results above, we find that:
+
+b. The reliability of this item estimated by the quasi-simplex model is about `r round(std_estimates$est.std[1], 1)`. 
+
+c. The stability of this item over time is about `r round(standardizedSolution(fit.liss) %>% filter(op == "~") %>% select("est.std") %>% unlist() %>% median(), 1)`. 
+ 
+:::
 
 

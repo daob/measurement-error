@@ -12,9 +12,7 @@ website:
     style: "docked"
     search: true
     contents:
-      - section: "Special topics"
-        contents:
-          - exercise-1.qmd
+      - exercise-1.qmd
 
 format:
   html:

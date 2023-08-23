@@ -2,10 +2,10 @@
 title: "Measurement error"
 ---
 
-This is a Quarto website.
+This is the landing page for practical exercises related to the topic **survey measurement error**, from the Utrecht University summer course *S16: survey research*.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+The slides can be found here: <https://daob.nl/files/S16-measurement-error-slides.pdf>
 
-```{r}
-1 + 1
-```
+The exercises themselves can be found in the navigation bar to the left. At the moment, the only available exercises are those regarding *estimation* of measurement error: <https://daob.github.io/measurement-error/exercise-1.html>
+
+The slides, current page, and the exercises were created by [me](https://daob.nl/about-me "A little more information about me (Daniel Oberski)").
