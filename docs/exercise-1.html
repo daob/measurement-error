@@ -217,6 +217,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#exercise-1.8" id="toc-exercise-1.8" class="nav-link" data-scroll-target="#exercise-1.8">Exercise 1.8</a></li>
   <li><a href="#exercise-1.9" id="toc-exercise-1.9" class="nav-link" data-scroll-target="#exercise-1.9">Exercise 1.9</a></li>
   </ul></li>
+  <li><a href="#quasi-simplex-model" id="toc-quasi-simplex-model" class="nav-link" data-scroll-target="#quasi-simplex-model">Quasi-simplex model</a></li>
   </ul>
 </nav>
     </div>
@@ -1203,10 +1204,16 @@ Variances:
 </div>
 </div>
 <p>If you managed to get this, excellent job! MTMM modeling can be quite confusing, especially at the beginning. With practice it will become more natural, and can be a powerful tool in your measurement error arsenal.</p>
-
-
 </section>
 </section>
+</section>
+<section id="quasi-simplex-model" class="level2">
+<h2 class="anchored" data-anchor-id="quasi-simplex-model">Quasi-simplex model</h2>
+<p>These models can be used to estimate the measurement error variance in longitudinal data. Such data are available from the <a href="https://www.lissdata.nl/lissdata/about-panel">LISS panel</a>.</p>
+<p>In the slides, error estimation in “internet use” using three timepoints (years 2008-2010) is explained. In the dataset, which is included in the <code>lavaan.survey</code> package as <code>liss</code>, a fourth timepoint, 2011, is also available (<code>cs11d247</code>). Adjust the model to the right to include <code>cs11d247</code> so it also estimates the reliability in 2011.</p>
+<p>The full study documentation as well as the raw data are publicly available at <a href="http://www.lissdata.nl/dataarchive/study_units/view/6" class="uri">http://www.lissdata.nl/dataarchive/study_units/view/6</a>. (BTW: LISS is an awesome publicly available longitudinal data source you should definitely check out if you’re ever looking for high-quality social science data)</p>
+
+
 </section>
 
 </main> <!-- /main -->

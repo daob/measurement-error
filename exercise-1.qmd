@@ -474,5 +474,12 @@ std_estimates
 
 If you managed to get this, excellent job! MTMM modeling can be quite confusing, especially at the beginning. With practice it will become more natural, and can be a powerful tool in your measurement error arsenal. 
 
+## Quasi-simplex model
+
+These models can be used to estimate the measurement error variance in longitudinal data. Such data are available from the [LISS panel](https://www.lissdata.nl/lissdata/about-panel). 
+
+In the slides, error estimation in "internet use" using three timepoints (years 2008-2010) is explained. In the dataset, which is included in the `lavaan.survey` package as `liss`, a fourth timepoint, 2011, is also available (`cs11d247`). Adjust the model to the right to include `cs11d247` so it also estimates the reliability in 2011.
+
+The full study documentation as well as the raw data are publicly available at <http://www.lissdata.nl/dataarchive/study_units/view/6>. (BTW: LISS is an awesome publicly available longitudinal data source you should definitely check out if you're ever looking for high-quality social science data)
 
 
